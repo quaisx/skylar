@@ -2,6 +2,14 @@ from pdf2image import convert_from_path
 import cv2
 import numpy as np
 import pytesseract
+import pandas as pd
+
+def get_conf(page_gray):
+    '''return a average confidence value of OCR result '''
+    df = pytesseract.image_to_data(page_gray,output_type='data.frame')
+    df.drop(df[df.conf==-1].index.values,inplace=True)
+    df.reset_index()
+    return df.conf.mean()
 
 def extract_text_from_image(image):
     text = pytesseract.image_to_string(image)
@@ -30,9 +38,9 @@ def process_page(page):
         # Transfer image of pdf_file into array
         page_arr = np.array(page)
         # Transfer into grayscale
-        page_arr_gray = cv2.cvtColor(page_arr, cv2.COLOR_BGR2GRAY)
+        # page_arr_gray = cv2.cvtColor(page_arr, cv2.COLOR_BGR2GRAY)
         # Deskew the page
-        page_deskew = deskew(page_arr_gray)
+        page_deskew = deskew(page_arr)
         # Cal confidence value
         page_conf = get_conf(page_deskew)
         # Extract string

@@ -14,14 +14,14 @@ import matplotlib.pyplot as plt
 from docx import Document
 from io import StringIO
 import re
-from PyPDF2 import PdfReader, PdfFileReader
+from PyPDF2 import PdfReader
 import read_pdf
 
 def extractPdfInformation(pdf_path):
     with open(pdf_path, 'rb') as f:
-        pdf = PdfFileReader(f)
-        information = pdf.getDocumentInfo()
-        number_of_pages = pdf.getNumPages()
+        pdf = PdfReader(f)
+        information = pdf.metadata
+        number_of_pages = len(pdf.pages)
 
     txt = f"""
     Information about {pdf_path}: 
@@ -51,8 +51,9 @@ def getPdfText(filename):
 
 # Load the legal document in Word format
 # doc = pd.read_word('2023.docx')
-info = extractPdfInformation('affidavit.pdf')
-text = read_pdf.extractTextPdf('affidavit.pdf')
+info = extractPdfInformation('test.pdf')
+x = getPdfText('test.pdf')
+text = read_pdf.extractTextPdf('test.pdf')
 text = text.lower()
 text = text.replace('\n','')
 
