@@ -7,13 +7,25 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from wordcloud import WordCloud
 import networkx as nx
 import matplotlib.pyplot as plt
-from fact_checking import FactChecker
+from docx import Document
+from io import StringIO
+import re
+# from fact_checking import FactChecker
+
+def getText(filename):
+    doc = Document(filename)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    txt = '\n'.join(fullText)
+    return re.sub(r'\n{2,}', '\n', txt)
 
 # Load the legal document in Word format
-doc = pd.read_word('legal_document.docx')
+# doc = pd.read_word('2023.docx')
+document = getText('2023.docx')
 
 # Preprocess the text
-text = doc['Text']
+text = document
 text = text.lower()
 text = text.replace('\n','')
 
@@ -58,8 +70,8 @@ nx.draw_networkx(G, pos, with_labels=True, node_color='lightblue', edge_color='g
 plt.show()
 
 # Perform Fact Checking
-fact_checker = FactChecker()
-claims = []
-for sentence in text.split('.'):
-    claims.append((sentence, fact_checker.check(sentence)))
-print(claims)
+# fact_checker = FactChecker()
+# claims = []
+# for sentence in text.split('.'):
+#     claims.append((sentence, fact_checker.check(sentence)))
+# print(claims)
